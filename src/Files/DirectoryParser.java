@@ -1,3 +1,4 @@
+package Files;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class DirectoryParser {
 	 */
 	public DirectoryParser(String dirPath) {
 		this.pathName = dirPath;
-		parser = ASTParser.newParser(AST.JLS9);
+		parser = ASTParser.newParser(AST.JLS8);
 		parser.setResolveBindings(false);
 	}
 	
@@ -34,7 +35,7 @@ public class DirectoryParser {
 	    CompilationUnit[] astContainer = new CompilationUnit[javaFiles.size()];
 	    
 	    for (int i = 0; i < javaFiles.size(); i++) {
-	    	astContainer[i] = parseFile(javaFiles.get(i));
+	    		astContainer[i] = parseFile(javaFiles.get(i));
 	    }
 	    
 	    return astContainer;
@@ -65,14 +66,14 @@ public class DirectoryParser {
 	 */
 	private CompilationUnit parseFile(File input) throws FileNotFoundException {
 		String source = "";
-    	reader = new Scanner(input);
+		reader = new Scanner(input);
     	
-    	while (reader.hasNextLine()) {
-    		source += reader.nextLine();
-    	}
-    	reader.close();
+		while (reader.hasNextLine()) {
+    			source += reader.nextLine();
+		}
+		reader.close();
     	
-    	parser.setSource(source.toCharArray());
-    	return (CompilationUnit) parser.createAST(null);
+		parser.setSource(source.toCharArray());
+		return (CompilationUnit) parser.createAST(null);
 	}
 }
