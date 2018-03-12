@@ -74,6 +74,8 @@ public class DirectoryParser {
 		reader.close();
     	
 		parser.setSource(source.toCharArray());
+		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		return (CompilationUnit) parser.createAST(null);
 	}
+	
 }
