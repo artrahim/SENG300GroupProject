@@ -7,14 +7,18 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.junit.*;
 
+import Files.DeclarationCounter;
 import Files.DirectoryParser;
 
 public class TestDirectoryParser {
 	
-	private static String BASEDIR = "/Users/Amitiss/Desktop/A3SENG300_TestFiles";
+	private static String BASEDIR = "src/TestFiles";
 	
 	/**
 	 * Checks that a null source will throw a NullPointerException
@@ -31,7 +35,7 @@ public class TestDirectoryParser {
 	 * @throws FileNotFoundException 
 	 */
 	@Test(expected = NullPointerException.class)
-	public void testCreateEmptyDirectoryParser() throws FileNotFoundException {
+	public void testCreateNoneExistingDirectoryParser() throws FileNotFoundException {
 		DirectoryParser dirParser = new DirectoryParser("foo");
 		dirParser.parseDirectory();
 	}
@@ -41,29 +45,71 @@ public class TestDirectoryParser {
 	 * @throws FileNotFoundException 
 	 */
 	@Test
-	public void testCreateWorkingDirectoryParser() {
+	public void testCreateWorkingDirectoryParser() throws FileNotFoundException {
 		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
-		try {
-			CompilationUnit[] cus = dirParser.parseDirectory();
-			assertNotNull(cus);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		CompilationUnit[] cus = dirParser.parseDirectory();
+		assertNotNull(cus);
 	}
+	
 	/**
 	 * Checks that a proper filepath with java files can be parsed
 	 * @throws FileNotFoundException 
 	 */
 	@Test
-	public void testCompilationUnitGetTypes() {
+	public void testCompilationUnitGetTypes() throws FileNotFoundException {
 		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
-		try {
-			CompilationUnit[] cus = dirParser.parseDirectory();
-			List type = cus[0].types();
-			assertNotNull(type);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		CompilationUnit[] cus = dirParser.parseDirectory();
+		List type = cus[0].types();
+		assertNotNull(type);
+	}
+	
+	/**
+	 * Check that the asts created are compilation units
+	 * @throws FileNotFoundException 
+	 */
+	@Test
+	public void testASTKindisCompilationUnit() throws FileNotFoundException {
+		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
+		CompilationUnit[] cus = dirParser.parseDirectory();
+		assertEquals(cus[0].getNodeType(), ASTNode.COMPILATION_UNIT);
+	}
+	
+	/**
+	 * Check that the parser correctly creates bindings
+	 * @throws FileNotFoundException 
+	 */
+	@Test
+	public void testASTHasBindings() throws FileNotFoundException {
+		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
+		CompilationUnit[] cus = dirParser.parseDirectory();
+		AST ast = cus[0].getAST();
+		assertTrue(ast.hasResolvedBindings());
+	}
+	
+	/**
+	 * Test that the DeclarationCounter counts the proper amount of declarations
+	 * @throws FileNotFoundException 
+	 */
+	@Test
+	public void testGetDeclarationCount() throws FileNotFoundException {
+		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
+		CompilationUnit[] cus = dirParser.parseDirectory();
+		DeclarationCounter dc = new DeclarationCounter("TestFiles.Multiply");
+		cus[0].accept(dc);
+		assertEquals(dc.getCount(), 1);
+	}
+	
+	/**
+	 * Test that the DeclarationCounter counts the proper amount of declarations
+	 * @throws FileNotFoundException 
+	 */
+	@Test
+	public void testNodeTypesDetected() throws FileNotFoundException {
+		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
+		CompilationUnit[] cus = dirParser.parseDirectory();
+		DeclarationCounter dc = new DeclarationCounter("TestFiles.TestClass");
+		cus[1].accept(dc);
+		assertEquals(dc.getCount(), 1);
 	}
 
 }
