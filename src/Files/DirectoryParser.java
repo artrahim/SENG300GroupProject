@@ -22,8 +22,6 @@ public class DirectoryParser {
 	public DirectoryParser(String dirPath) {
 		this.directory = new File(dirPath);
 		parser = ASTParser.newParser(AST.JLS8);
-		parser.setResolveBindings(true);
-		parser.setEnvironment(JavaCore.getClasspathVariableNames(), null, null, true);
 	}
 	
 	/**
@@ -68,16 +66,20 @@ public class DirectoryParser {
 	private CompilationUnit parseFile(File input) throws FileNotFoundException {
 		String source = "";
 		reader = new Scanner(input);
-    	
+		// set the right settings for ASTParser
+		parser.setResolveBindings(true);
+		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		parser.setEnvironment(JavaCore.getClasspathVariableNames(), null, null, true);
+		
 		while (reader.hasNextLine()) {
     			source += reader.nextLine();
     			source += "\n";
 		}
 		reader.close();
-    	
+		
 		parser.setUnitName(input.getAbsolutePath());
 		parser.setSource(source.toCharArray());
-		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		
 		return (CompilationUnit) parser.createAST(null);
 	}
 	
