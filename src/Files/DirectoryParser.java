@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 public class DirectoryParser {
-	private String pathName;
+	private File directory;
 	private ASTParser parser;
 	private Scanner reader;
 	
@@ -19,9 +20,10 @@ public class DirectoryParser {
 	 * @param dirPath the directory to parse
 	 */
 	public DirectoryParser(String dirPath) {
-		this.pathName = dirPath;
+		this.directory = new File(dirPath);
 		parser = ASTParser.newParser(AST.JLS8);
-		parser.setResolveBindings(false);
+		parser.setResolveBindings(true);
+		parser.setEnvironment(JavaCore.getClasspathVariableNames(), null, null, true);
 	}
 	
 	/**
@@ -46,7 +48,6 @@ public class DirectoryParser {
 	 * @return the list of files, represented as File objects
 	 */
 	private ArrayList<File> getJavaFiles() {
-		File directory = new File(pathName);
 		ArrayList<File> allFiles = new ArrayList<File>(Arrays.asList(directory.listFiles()));
 		ArrayList<File> javaFiles = new ArrayList<File>();
 		for (File file : allFiles) {
@@ -74,6 +75,7 @@ public class DirectoryParser {
 		}
 		reader.close();
     	
+		parser.setUnitName(input.getAbsolutePath());
 		parser.setSource(source.toCharArray());
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		return (CompilationUnit) parser.createAST(null);
