@@ -8,7 +8,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 public class Driver {
 	public static void main(String[] args) throws FileNotFoundException {
-		DirectoryParser parser = new DirectoryParser("C:\\Users\\bille\\OneDrive\\Documents\\SENG-300\\Assignments\\testDirectory\\src\\testProject");
+		DirectoryParser parser = new DirectoryParser(args[0]);
 		CompilationUnit[] asts = parser.parseDirectory();
 		System.out.println(asts[0].toString());
 		System.out.println(asts[1].toString());
