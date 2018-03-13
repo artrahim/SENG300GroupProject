@@ -70,6 +70,7 @@ public class DirectoryParser {
     	
 		while (reader.hasNextLine()) {
     			source += reader.nextLine();
+    			source += "\n";
 		}
 		reader.close();
     	
