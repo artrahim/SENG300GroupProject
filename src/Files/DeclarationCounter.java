@@ -14,27 +14,35 @@ public class DeclarationCounter extends ASTVisitor{
 		declarationName = type;
 	}
 	
+	/*
 	public void preVisit(CompilationUnit node) {
 		if (ASTNode.COMPILATION_UNIT != node.getNodeType()) {
 			System.out.println("Root is not a compilation unit.");
 		}
 	}
-	
-	//counts declaration
-	public boolean visit(SimpleType node) {
-		System.out.println(node.getName().getFullyQualifiedName());
-		System.out.println(node.getStartPosition());
-		if (declarationName == node.getName().getFullyQualifiedName()) {
-			declarationCount++;
+	*/
+	public boolean visit(SimpleName node) {
+		//System.out.println(node.getStartPosition()); 
+		//System.out.println("is declaration? " + node.isDeclaration());
+		//System.out.println("SimpleName " + node.getIdentifier() + node.getStartPosition());
+		//System.out.println("parentNode " + node.getLocationInParent());
+		//System.out.println("Identifier " + node.getLocationInParent());
+			
+		if (node.resolveBinding() != null) {
+			if (node.resolveBinding().getKind() == IBinding.TYPE) {
+				ITypeBinding typeNode = (ITypeBinding) node.resolveBinding();
+				if (typeNode.getQualifiedName().equals(declarationName)) {
+					declarationCount++;
+				}
+				System.out.println("SimpleName " + node.getFullyQualifiedName() + "Position " + node.getStartPosition());
+				System.out.println("qualified name " + typeNode.getQualifiedName());
+			}
+			//System.out.println("Binding " + node.resolveBinding().getAnnotations());
 		}
 		return true;
 	}
 	
-	// WORK IN PROGRESS
-	public boolean visit(QualifiedName node) {
-		System.out.println(node.getStartPosition());
-		System.out.println(node.getQualifier().getFullyQualifiedName() + "-qualifiedName");
-		return true;
+	public int getCount() {
+		return declarationCount;
 	}
-	
 }
