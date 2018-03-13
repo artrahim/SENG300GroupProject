@@ -5,7 +5,7 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.*;
 
 // counts the number of declaration and reference to a given qualified name
-public class Counter extends ASTVisitor{
+public class QualifiedNameCounter extends ASTVisitor{
 	private String givenQualifiedName = null;
 	private int declarationCount = 0;
 	private int referenceCount = 0;
@@ -14,7 +14,7 @@ public class Counter extends ASTVisitor{
 	 * 
 	 * @param input = qualified name to search for
 	 */
-	public Counter(String input) {
+	public QualifiedNameCounter(String input) {
 		givenQualifiedName = input;
 	}
 	
