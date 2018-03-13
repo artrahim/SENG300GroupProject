@@ -13,7 +13,9 @@ import org.junit.*;
 import Files.DirectoryParser;
 
 public class TestDirectoryParser {
-
+	
+	private static String BASEDIR = "/Users/Amitiss/Desktop/A3SENG300_TestFiles";
+	
 	/**
 	 * Checks that a null source will throw a NullPointerException
 	 * @throws FileNotFoundException 
@@ -40,7 +42,7 @@ public class TestDirectoryParser {
 	 */
 	@Test
 	public void testCreateWorkingDirectoryParser() {
-		DirectoryParser dirParser = new DirectoryParser("src/Tests");
+		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
 		try {
 			CompilationUnit[] cus = dirParser.parseDirectory();
 			assertNotNull(cus);
@@ -54,7 +56,7 @@ public class TestDirectoryParser {
 	 */
 	@Test
 	public void testCompilationUnitGetTypes() {
-		DirectoryParser dirParser = new DirectoryParser("src/Tests");
+		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
 		try {
 			CompilationUnit[] cus = dirParser.parseDirectory();
 			List type = cus[0].types();
