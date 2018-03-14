@@ -13,7 +13,6 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.junit.*;
 
-import Files.DeclarationCounter;
 import Files.DirectoryParser;
 
 public class TestDirectoryParser {
@@ -84,32 +83,6 @@ public class TestDirectoryParser {
 		CompilationUnit[] cus = dirParser.parseDirectory();
 		AST ast = cus[0].getAST();
 		assertTrue(ast.hasResolvedBindings());
-	}
-	
-	/**
-	 * Test that the DeclarationCounter counts the proper amount of declarations
-	 * @throws FileNotFoundException 
-	 */
-	@Test
-	public void testGetDeclarationCount() throws FileNotFoundException {
-		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
-		CompilationUnit[] cus = dirParser.parseDirectory();
-		DeclarationCounter dc = new DeclarationCounter("TestFiles.Multiply");
-		cus[0].accept(dc);
-		assertEquals(dc.getCount(), 1);
-	}
-	
-	/**
-	 * Test that the DeclarationCounter counts the proper amount of declarations
-	 * @throws FileNotFoundException 
-	 */
-	@Test
-	public void testNodeTypesDetected() throws FileNotFoundException {
-		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
-		CompilationUnit[] cus = dirParser.parseDirectory();
-		DeclarationCounter dc = new DeclarationCounter("TestFiles.TestClass");
-		cus[1].accept(dc);
-		assertEquals(dc.getCount(), 1);
 	}
 
 }
