@@ -4,11 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
 
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.junit.Test;
 
-import Files.Counter;
 import Files.DirectoryParser;
+import Files.QualifiedNameCounter;
 
 public class TestCounter {
 	private static String BASEDIR = "src/TestFiles";
@@ -21,9 +22,9 @@ public class TestCounter {
 	public void testGetDeclarationCount() throws FileNotFoundException {
 		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
 		CompilationUnit[] cus = dirParser.parseDirectory();
-		Counter dc = new Counter("TestFiles.Multiply");
-		cus[0].accept(dc);
-		assertEquals(dc.getDeclarationCount(), 1);
+		QualifiedNameCounter counter = new QualifiedNameCounter("TestFiles.Multiply");
+		cus[0].accept(counter);
+		assertEquals(counter.getDeclarationCount(), 1);
 	}
 	
 	/**
@@ -31,11 +32,36 @@ public class TestCounter {
 	 * @throws FileNotFoundException 
 	 */
 	@Test
-	public void testGetReferenceCount() throws FileNotFoundException {
+	public void testGetPrimitiveReferenceCount() throws FileNotFoundException {
 		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
 		CompilationUnit[] cus = dirParser.parseDirectory();
-		Counter dc = new Counter("char");
-		cus[1].accept(dc);
-		assertEquals(dc.getReferenceCount(), 2);
+		QualifiedNameCounter counter = new QualifiedNameCounter("int");
+		cus[1].accept(counter);
+		assertEquals(counter.getReferenceCount(), 4);
+	}
+	
+	/**
+	 * Test that the Counter counts the proper amount of references
+	 * @throws FileNotFoundException 
+	 */
+	@Test
+	public void testGetNonPrimitiveReferenceCount() throws FileNotFoundException {
+		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
+		CompilationUnit[] cus = dirParser.parseDirectory();
+		QualifiedNameCounter counter = new QualifiedNameCounter("java.lang.String");
+		cus[1].accept(counter);
+		assertEquals(counter.getReferenceCount(), 1);
+	}
+	
+	/**
+	 * Test that the nodes created are of the correct type
+	 * @throws FileNotFoundException 
+	 */
+	@Test
+	public void testNodeTypes() throws FileNotFoundException {
+		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
+		CompilationUnit[] cus = dirParser.parseDirectory();
+		QualifiedNameCounter counter = new QualifiedNameCounter("java.lang.String");
+		assertEquals(cus[1].getNodeType(), ASTNode.TYPE_DECLARATION);
 	}
 }
