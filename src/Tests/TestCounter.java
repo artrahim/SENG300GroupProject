@@ -19,7 +19,7 @@ public class TestCounter {
 	 * @throws FileNotFoundException 
 	 */
 	@Test
-	public void testGetDeclarationCount() throws FileNotFoundException {
+	public void testDeclarationCount() throws FileNotFoundException {
 		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
 		CompilationUnit[] cus = dirParser.parseDirectory();
 		QualifiedNameCounter counter = new QualifiedNameCounter("TestFiles.Multiply");

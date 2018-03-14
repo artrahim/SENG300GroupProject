@@ -30,10 +30,10 @@ public class TestDirectoryParser {
 	}
 	
 	/**
-	 * Checks that a poor filepath will not be parsed
+	 * Checks that a poor filepath will not be parsed and print a message to the user
 	 * @throws FileNotFoundException 
 	 */
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testCreateNoneExistingDirectoryParser() throws FileNotFoundException {
 		DirectoryParser dirParser = new DirectoryParser("foo");
 		dirParser.parseDirectory();
