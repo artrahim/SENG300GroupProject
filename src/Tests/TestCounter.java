@@ -52,16 +52,4 @@ public class TestCounter {
 		cus[1].accept(counter);
 		assertEquals(counter.getReferenceCount(), 1);
 	}
-	
-	/**
-	 * Test that the nodes created are of the correct type
-	 * @throws FileNotFoundException 
-	 */
-	@Test
-	public void testNodeTypes() throws FileNotFoundException {
-		DirectoryParser dirParser = new DirectoryParser(BASEDIR);
-		CompilationUnit[] cus = dirParser.parseDirectory();
-		QualifiedNameCounter counter = new QualifiedNameCounter("java.lang.String");
-		assertEquals(cus[1].getNodeType(), ASTNode.TYPE_DECLARATION);
-	}
 }
