@@ -1,6 +1,5 @@
 package Files;
 
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.*;
 
@@ -19,54 +18,6 @@ public class QualifiedNameCounter extends ASTVisitor{
 	public QualifiedNameCounter(String input) {
 		givenQualifiedName = input;
 	}
-	
-	/* IGNORE - USED FOR DEBUGGING
-	 * DELETE LATER
-	 * tell us which part of the code belongs to which binding 
-	 */
-	/*
-	public boolean visit(SimpleName node) {
-		//System.out.println(node.getStartPosition()); 
-		//System.out.println("is declaration? " + node.isDeclaration());
-		//System.out.println("SimpleName " + node.getIdentifier() + node.getStartPosition());
-		//System.out.println("type of node " + node.getLocationInParent());
-		//System.out.println("Identifier " + node.getLocationInParent());
-		
-		if (node.resolveBinding() != null) {
-			if (node.resolveBinding().getKind() == IBinding.TYPE) {
-				System.out.println("simpleName " + node.getIdentifier() + node.getStartPosition());
-			
-				ITypeBinding typeNode = (ITypeBinding) node.resolveBinding();
-				System.out.println("Itype " + typeNode.getQualifiedName());
-				if (typeNode.getQualifiedName().equals(declarationName)) {
-					declarationCount++;
-				}
-				//System.out.println("SimpleName " + node.getFullyQualifiedName() + "Position " + node.getStartPosition());
-				//System.out.println("qualified name " + typeNode.getQualifiedName());
-			}
-			
-			if (node.resolveBinding().getKind() == IBinding.VARIABLE) {
-				IVariableBinding varBind = (IVariableBinding) node.resolveBinding();
-				System.out.println("simpleName " + node.getIdentifier() + node.getStartPosition());
-				System.out.println("IVariableBinding " + varBind.getType().getQualifiedName());
-			}
-			if (node.resolveBinding().getKind() == IBinding.METHOD) {
-				IMethodBinding varBind = (IMethodBinding) node.resolveBinding();
-				System.out.println("simpleName " + node.getIdentifier() + node.getStartPosition());
-				System.out.println("IMethodBinding " + varBind.getDeclaringClass().getQualifiedName());
-			}
-			
-			if (node.resolveBinding().getKind() == IBinding.ANNOTATION) {
-				IAnnotationBinding varBind = (IAnnotationBinding) node.resolveBinding();
-				System.out.println("simpleName " + node.getIdentifier() + node.getStartPosition());
-				System.out.println("IAnnotationBinding " + varBind.getAnnotationType().getQualifiedName());
-			}
-			//System.out.println("Binding " + node.resolveBinding().getAnnotations()); 
-		}
-		
-		return true;
-	}
-	*/
 	
 	/**
 	 * @overrides visit(TypeDeclaration node)
@@ -111,14 +62,14 @@ public class QualifiedNameCounter extends ASTVisitor{
 	}
 	
 	/**
-	 * @return = declaration count of the given qualified name
+	 * @return = int: declaration count of the given qualified name
 	 */
 	public int getDeclarationCount() {
 		return declarationCount;
 	}
 	
 	/**
-	 * @return = reference count of the given qualified name
+	 * @return = int: reference count of the given qualified name
 	 */
 	public int getReferenceCount() {
 		return referenceCount;
