@@ -30,16 +30,30 @@ public class DirectoryParser {
 	 * @throws FileNotFoundException if a source file cannot be found
 	 */
 	public CompilationUnit[] parseDirectory() throws FileNotFoundException {
-		ArrayList<File> javaFiles = getJavaFiles();
+		ArrayList<File> javaFiles = null;
+		try {
+			javaFiles = getJavaFiles();
+		} catch (NullPointerException npe) {
+			System.out.println("Invalid directory.");
+		}
 	    
-	    CompilationUnit[] astContainer = new CompilationUnit[javaFiles.size()];
-	    
-	    for (int i = 0; i < javaFiles.size(); i++) {
+		if (javaFiles != null) {
+			CompilationUnit[] astContainer = new CompilationUnit[javaFiles.size()];
+			for (int i = 0; i < javaFiles.size(); i++) {
 	    		astContainer[i] = parseFile(javaFiles.get(i));
-	    }
-	    
-	    return astContainer;
+			}
+			return astContainer;
+		}
+		return null;
 	  }
+	
+	/**
+	 * Sets the parser to a different directory.
+	 * @param newPath the directory to parse
+	 */
+	public void setDirectory(String newPath) {
+		this.directory = new File(newPath);
+	}
 	
 	/**
 	 * Returns a list of all files in the directory with .java extensions.
