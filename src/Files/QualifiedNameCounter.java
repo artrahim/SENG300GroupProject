@@ -4,22 +4,24 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.*;
 
-// counts the number of declaration and reference to a given qualified name
+/**
+ * counts the number of references and declaration of a given name in a Java file
+ * @author ben
+ */
 public class QualifiedNameCounter extends ASTVisitor{
 	private String givenQualifiedName = null;
 	private int declarationCount = 0;
 	private int referenceCount = 0;
 	
 	/**
-	 * 
 	 * @param input = qualified name to search for
 	 */
 	public QualifiedNameCounter(String input) {
 		givenQualifiedName = input;
 	}
 	
-	/* IGNORE
-	 * experimental method
+	/* IGNORE - USED FOR DEBUGGING
+	 * DELETE LATER
 	 * tell us which part of the code belongs to which binding 
 	 */
 	/*
@@ -66,8 +68,8 @@ public class QualifiedNameCounter extends ASTVisitor{
 	}
 	*/
 	
-	/*
-	 * @overrides vist(TypeDeclaration node)
+	/**
+	 * @overrides visit(TypeDeclaration node)
 	 * counts the number of declaration of the qualified name
 	 */
 	public boolean visit(TypeDeclaration node) {
@@ -95,8 +97,20 @@ public class QualifiedNameCounter extends ASTVisitor{
 		return true;
 	}
 	
+	/*
+	 * @overrides visit(PrimitiveType node)
+	 * counts the number of references to a given primitive type
+	 */
+	public boolean visit(PrimitiveType node) {
+		//System.out.println("SimpleName " + node.getName().getFullyQualifiedName() + node.getStartPosition());
+		if (node.resolveBinding() != null && (node.resolveBinding().getQualifiedName().equals(givenQualifiedName))) {
+			referenceCount++;
+		}
+
+		return true;
+	}
+	
 	/**
-	 * 
 	 * @return = declaration count of the given qualified name
 	 */
 	public int getDeclarationCount() {
@@ -104,7 +118,6 @@ public class QualifiedNameCounter extends ASTVisitor{
 	}
 	
 	/**
-	 * 
 	 * @return = reference count of the given qualified name
 	 */
 	public int getReferenceCount() {
