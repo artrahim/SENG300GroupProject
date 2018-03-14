@@ -1,23 +1,27 @@
 package Files;
 
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+// calls the appropriate functions to run the program
 public class Driver {
 	public static void main(String[] args) throws FileNotFoundException {
+		// initialize the parser to the given directory
 		DirectoryParser parser = new DirectoryParser(args[0]);
 		CompilationUnit[] asts = parser.parseDirectory();
-		System.out.println(asts[0].toString());
-		System.out.println(asts[1].toString());
-		asts[0].accept(new DeclarationCounter("String"));
-		//System.out.println(asts[0].toString());
-		//System.out.println(asts[0].propertyDescriptors(AST.JLS8).get(2));
-		System.out.println(asts[0].TYPES_PROPERTY);
-		System.out.println(asts[0].getNodeType() == ASTNode.COMPILATION_UNIT);
-		System.out.println(asts[0].properties());
-		System.out.println("it worked?");
+		// initialize the counter to the given name
+		QualifiedNameCounter counter = new QualifiedNameCounter(args[1]);
+
+		// visits the nodes for each ast
+		for (int i = 0; i < Array.getLength(asts) ; i++) { //ADD parse.getLenth() to DirectoryParser()
+			asts[i].accept(counter);
+		}
+		
+		// prints the result
+		System.out.println(args[1] + "." + " Declarations found: " + counter.getDeclarationCount() + ";" + " references found: " + counter.getReferenceCount());
 	}
 }
